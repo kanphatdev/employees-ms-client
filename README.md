@@ -54,6 +54,23 @@ npm i nodemon
 npm create vite@latest
 ### Select the react template 
 ```
+```bash
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+```bash
+npm i -D daisyui@latest
+```
+```bash
+npm i react-router-dom
+```
+```bash
+npm i axios
+```
+```bash
+npm install lucide-react
+```
+
 
 # Code Stack
 
