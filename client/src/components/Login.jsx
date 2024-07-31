@@ -1,28 +1,36 @@
-import { useState } from 'react';
-import { Lock, User } from 'lucide-react';
-import axios from 'axios';
+import { useState } from "react";
+import { Lock, User } from "lucide-react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [values, setValues] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
-  const [error, setError] = useState(''); // For error handling
+  const [error, setError] = useState(""); // For error handling
   const [loading, setLoading] = useState(false); // For loading state
+  const navigate = useNavigate();
+  axios.defaults.withCredentials = true; // Store credentials
 
   const handleLogin = (e) => {
     e.preventDefault();
     setLoading(true); // Set loading to true when starting the request
-    setError(''); // Clear previous errors
+    setError(""); // Clear previous errors
 
-    axios.post('http://localhost:5000/auth/adminlogin', values)
-      .then(result => {
+    axios
+      .post("http://localhost:5000/auth/adminlogin", values)
+      .then((result) => {
         console.log(result);
-        // Handle successful login, e.g., redirect or show a success message
+        if (result.data.loginStatus) {
+          navigate("/dashboard");
+        } else {
+          setError(result.data.Error);
+        }
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
-        setError('Login failed. Please try again.'); // Set error message
+        setError("Login failed. Please try again."); // Set error message
       })
       .finally(() => {
         setLoading(false); // Set loading to false after request completes
@@ -48,7 +56,9 @@ const Login = () => {
               <input
                 type="email"
                 value={values.email}
-                onChange={(e) => setValues({ ...values, email: e.target.value })}
+                onChange={(e) =>
+                  setValues({ ...values, email: e.target.value })
+                }
                 className="w-full py-2 px-3 focus:outline-none"
                 placeholder="Enter your email"
                 required
@@ -68,7 +78,9 @@ const Login = () => {
               <input
                 type="password"
                 value={values.password}
-                onChange={(e) => setValues({ ...values, password: e.target.value })}
+                onChange={(e) =>
+                  setValues({ ...values, password: e.target.value })
+                }
                 className="w-full py-2 px-3 focus:outline-none"
                 placeholder="Enter your password"
                 required
@@ -81,14 +93,16 @@ const Login = () => {
           )}
           <button
             type="submit"
-            className={`w-full ${loading ? 'bg-blue-300' : 'bg-blue-500'} text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200`}
+            className={`w-full ${
+              loading ? "bg-blue-300" : "bg-blue-500"
+            } text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200`}
             disabled={loading} // Disable button while loading
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
         <p className="text-center text-sm text-gray-600 mt-4">
-          Don't have an account?{' '}
+          Don't have an account?{" "}
           <a href="/signup" className="text-blue-500 hover:underline">
             Sign up
           </a>
