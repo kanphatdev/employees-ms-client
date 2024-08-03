@@ -1,14 +1,37 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import PageLayout from "./layout";
 
-const categories = [
-  { id: 1, name: "Electronics" },
-  { id: 2, name: "Books" },
-  { id: 3, name: "Clothing" },
-  // Add more categories as needed
-];
-
 const Category = () => {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/auth/category");
+        setCategories(response.data);
+      } catch (err) {
+        setError("Failed to fetch categories.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString(); // Formats to 'MM/DD/YYYY, HH:MM:SS AM/PM'
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
   return (
     <PageLayout>
       <div className="flex flex-col items-center justify-center py-8">
@@ -31,6 +54,9 @@ const Category = () => {
                 <th className="px-6 py-3 text-left text-sm font-medium hover:bg-[#457b9d]">
                   Category Name
                 </th>
+                <th className="px-6 py-3 text-left text-sm font-medium hover:bg-[#457b9d]">
+                  Created At
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -39,8 +65,11 @@ const Category = () => {
                   key={category.id}
                   className="hover:bg-[#f1f5f9]"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 uppercase">
                     {category.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {formatDate(category.created_at)}
                   </td>
                 </tr>
               ))}

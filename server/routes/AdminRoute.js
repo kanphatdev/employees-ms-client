@@ -3,7 +3,7 @@ import conn from "../util/db.js"; // Import your database connection
 import jwt from "jsonwebtoken";
 const adminRouter = express.Router();
 
-// Define your route
+// admin  route
 adminRouter.post("/adminlogin", (req, res) => {
   // SQL query to check if the email and password match
   const sql = "SELECT * FROM admin WHERE email = ? AND password = ?";
@@ -31,6 +31,21 @@ adminRouter.post("/adminlogin", (req, res) => {
       return res.json({loginStatus:false,Error:"wrong email or password"})
   
     }
+  });
+});
+
+// Category list routes
+adminRouter.get('/category', (req, res) => {
+  const sql = "SELECT * FROM `category`";
+
+  conn.query(sql, (err, results) => {
+    if (err) {
+      console.error("Query error: " + err);
+      return res.status(500).send("An error occurred");
+    }
+
+    // Send the results back to the client
+    res.json(results);
   });
 });
 

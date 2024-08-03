@@ -86,6 +86,12 @@ npm install lucide-react
 |                     | Nodemon         |
 
 
+| Section  | Colors   |
+|----------|----------|
+| Primary  | #ffb07c  |
+| Secondary| #e5a186  |
+| Tertiary | #457b9d  |
+| Accent   | #669bbc  |
 
 
 
