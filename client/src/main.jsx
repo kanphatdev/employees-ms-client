@@ -6,11 +6,12 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import Login from './components/Login.jsx';
-import Dashboard from './components/Dashboard.jsx';
-import Manange from './components/Manange.jsx';
-import Category from './components/Category.jsx';
-import Profile from './components/Profile.jsx';
+import Login from './pages/Login.jsx';
+import Dashboard from './pages/Dashboard.jsx';
+import Manange from './pages/Manange.jsx';
+import Category from './pages/Category.jsx';
+import Profile from './pages/Profile.jsx';
+import AddCategory from './pages/AddCategory.jsx';
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
     element: <Dashboard/>,
   },
   {
-    path: "/dashboard/manange",
+    path: "/dashboard/employees",
     element: <Manange/>,
   },
   {
@@ -37,7 +38,10 @@ const router = createBrowserRouter([
     path: "/dashboard/profile",
     element: <Profile/>,
   },
-
+  {
+    path: "/dashboard/add_category",
+    element: <AddCategory/>,
+  },
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
