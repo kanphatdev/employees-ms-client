@@ -1,16 +1,30 @@
 import { useNavigate } from "react-router-dom";
 import PageLayout from "./layout";
 import { useState } from "react";
+import axios from "axios";
 import { ArrowLeftFromLine } from "lucide-react";
 
 const AddCategory = () => {
   const [categoryName, setCategoryName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle form submission
-    console.log("Category Name:", categoryName);
+    setLoading(true);
+    setError(null);
+
+    try {
+      await axios.post("http://localhost:5000/auth/add_category", { name: categoryName });
+      // Optionally handle success (e.g., show a success message, navigate to another page, etc.)
+      navigate("/dashboard/category"); // Redirect to the categories list page
+    } catch (err) {
+      setError("Failed to add category.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleBack = () => {
@@ -48,10 +62,12 @@ const AddCategory = () => {
               <button
                 type="submit"
                 className="w-full md:w-2/3 bg-[#ffb07c] text-black py-2 px-6 rounded-md hover:bg-[#e5a186] transition-colors duration-300"
+                disabled={loading}
               >
-                Add Category
+                {loading ? "Adding..." : "Add Category"}
               </button>
             </div>
+            {error && <p className="mt-4 text-red-600">{error}</p>}
           </form>
         </div>
       </div>
@@ -60,4 +76,3 @@ const AddCategory = () => {
 };
 
 export default AddCategory;
-    

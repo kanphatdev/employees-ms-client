@@ -12,6 +12,7 @@ import Manange from './pages/Manange.jsx';
 import Category from './pages/Category.jsx';
 import Profile from './pages/Profile.jsx';
 import AddCategory from './pages/AddCategory.jsx';
+import AddEmployee from './pages/AddEmployee.jsx';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,14 @@ const router = createBrowserRouter([
   {
     path: "/dashboard/add_category",
     element: <AddCategory/>,
+  },
+  {
+    path: "/dashboard/add_category",
+    element: <AddCategory/>,
+  },
+  {
+    path: "/dashboard/add_employee",
+    element: <AddEmployee/>,
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(

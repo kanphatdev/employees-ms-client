@@ -22,20 +22,18 @@ adminRouter.post("/adminlogin", (req, res) => {
         { role: "admin", email: email },
         "jwt_secret_key",
         { expiresIn: "1d" }
-      
       );
-      res.cookie("token",token)
-      return res.json({loginStatus:true})
+      res.cookie("token", token);
+      return res.json({ loginStatus: true });
     } else {
       // User not found
-      return res.json({loginStatus:false,Error:"wrong email or password"})
-  
+      return res.json({ loginStatus: false, Error: "wrong email or password" });
     }
   });
 });
 
 // Category list routes
-adminRouter.get('/category', (req, res) => {
+adminRouter.get("/category", (req, res) => {
   const sql = "SELECT * FROM `category`";
 
   conn.query(sql, (err, results) => {
@@ -48,5 +46,25 @@ adminRouter.get('/category', (req, res) => {
     res.json(results);
   });
 });
+// Add categories route
+adminRouter.post("/add_category", (req, res) => {
+  const { name } = req.body; // Assuming you are sending the category name in the request body
 
+  // SQL query to insert a new category (no need to include created_at)
+  const sql = "INSERT INTO `category` (`name`) VALUES (?)";
+
+  // Execute the query
+  conn.query(sql, [name], (err, results) => {
+    if (err) {
+      console.error("Query error: " + err);
+      return res.status(500).send("An error occurred");
+    }
+
+    // Send a success response
+    res.json({ success: true, message: "Category added successfully" });
+  });
+});
+//start image upload
+
+//end image upload
 export default adminRouter;
