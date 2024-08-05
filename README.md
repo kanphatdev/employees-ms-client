@@ -85,7 +85,7 @@ npm install lucide-react
 |                     | Path            |
 |                     | Nodemon         |
 
-
+## colors theme
 | Section  | Colors   |
 |----------|----------|
 | Primary  | #ffb07c  |

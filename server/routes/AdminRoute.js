@@ -1,14 +1,27 @@
 import express from "express";
 import conn from "../util/db.js"; // Import your database connection
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+// import multer from "multer";
+// import path from "path";
+
 const adminRouter = express.Router();
 
-// admin  route
+// Start image upload
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "Public/Images");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname));
+//   },
+// });
+// const upload = multer({ storage: storage });
+
+// Admin login route
 adminRouter.post("/adminlogin", (req, res) => {
-  // SQL query to check if the email and password match
   const sql = "SELECT * FROM admin WHERE email = ? AND password = ?";
 
-  // Execute the query
   conn.query(sql, [req.body.email, req.body.password], (err, results) => {
     if (err) {
       console.error("Query error: " + err);
@@ -16,7 +29,6 @@ adminRouter.post("/adminlogin", (req, res) => {
     }
 
     if (results.length > 0) {
-      // User found
       const email = results[0].email;
       const token = jwt.sign(
         { role: "admin", email: email },
@@ -26,7 +38,6 @@ adminRouter.post("/adminlogin", (req, res) => {
       res.cookie("token", token);
       return res.json({ loginStatus: true });
     } else {
-      // User not found
       return res.json({ loginStatus: false, Error: "wrong email or password" });
     }
   });
@@ -42,29 +53,62 @@ adminRouter.get("/category", (req, res) => {
       return res.status(500).send("An error occurred");
     }
 
-    // Send the results back to the client
     res.json(results);
   });
 });
+
 // Add categories route
 adminRouter.post("/add_category", (req, res) => {
-  const { name } = req.body; // Assuming you are sending the category name in the request body
+  const { name } = req.body;
 
-  // SQL query to insert a new category (no need to include created_at)
   const sql = "INSERT INTO `category` (`name`) VALUES (?)";
 
-  // Execute the query
   conn.query(sql, [name], (err, results) => {
     if (err) {
       console.error("Query error: " + err);
       return res.status(500).send("An error occurred");
     }
 
-    // Send a success response
     res.json({ success: true, message: "Category added successfully" });
   });
 });
-//start image upload
 
-//end image upload
+// Add employee route
+adminRouter.post("/add_employee", async (req, res) => {
+  const { name, email, password, salary, address, categorytype } = req.body;
+  const image = req.file ? req.file.filename : "";
+
+  try {
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const sql = "INSERT INTO `employee` (`name`, `email`, `password`, `salary`, `address`, `image`, `category_name`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    conn.query(sql, [name, email, hashedPassword, salary, address, image, categorytype], (err, results) => {
+      if (err) {
+        console.error("Query error: " + err);
+        return res.status(500).send("An error occurred");
+      }
+
+      res.json({ success: true, message: "Employee added successfully" });
+    });
+  } catch (error) {
+    console.error("Error hashing password: " + error);
+    res.status(500).send("An error occurred");
+  }
+});
+// employee list route
+adminRouter.get("/employees", (req, res) => {
+  const sql = "SELECT * FROM `employee`";
+
+  conn.query(sql, (err, results) => {
+    if (err) {
+      console.error("Query error: " + err);
+      return res.status(500).send("An error occurred");
+    }
+
+    res.json(results);
+  });
+});
+
 export default adminRouter;

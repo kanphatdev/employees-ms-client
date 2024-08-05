@@ -16,10 +16,9 @@ app.use(express.json());
 // Use the routes from routes folder
 app.use('/auth', adminRouter);
 
-// Define a basic route
-app.get('/', (req, res) => {
-    res.send('Hello, World!');
-});
+// add static for the image
+// app.use(express.static('Public'));
+
 
 // Start the server
 app.listen(port, () => {
