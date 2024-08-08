@@ -43,14 +43,16 @@ const Login = () => {
         <div className="flex justify-center mb-4">
           <img src="./logo.svg" alt="Logo" width={50} height={50} />
         </div>
-        <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+        <h2 className="text-2xl font-bold text-center mb-6" style={{ color: "#52575D" }}>
+          Login
+        </h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label className="block mb-2 text-sm font-medium text-gray-700">
+            <label className="block mb-2 text-sm font-medium" style={{ color: "#52575D" }}>
               Email
             </label>
             <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-              <span className="px-3 text-gray-500">
+              <span className="px-3" style={{ color: "#457b9d" }}>
                 <User />
               </span>
               <input
@@ -68,11 +70,11 @@ const Login = () => {
             </div>
           </div>
           <div className="mb-4">
-            <label className="block mb-2 text-sm font-medium text-gray-700">
+            <label className="block mb-2 text-sm font-medium" style={{ color: "#52575D" }}>
               Password
             </label>
             <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-              <span className="px-3 text-gray-500">
+              <span className="px-3" style={{ color: "#457b9d" }}>
                 <Lock />
               </span>
               <input
@@ -94,16 +96,16 @@ const Login = () => {
           <button
             type="submit"
             className={`w-full ${
-              loading ? "bg-blue-300" : "bg-blue-500"
-            } text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200`}
+              loading ? "bg-[#ffb07c]" : "bg-[#e5a186]"
+            } text-white py-2 rounded-lg hover:bg-[#457b9d] transition duration-200`}
             disabled={loading} // Disable button while loading
           >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-        <p className="text-center text-sm text-gray-600 mt-4">
+        <p className="text-center text-sm mt-4" style={{ color: "#52575D" }}>
           Don't have an account?{" "}
-          <a href="/signup" className="text-blue-500 hover:underline">
+          <a href="/signup" className="text-[#669bbc] hover:underline">
             Sign up
           </a>
         </p>

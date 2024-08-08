@@ -85,6 +85,7 @@ npm install lucide-react
 |                     | Path            |
 |                     | Nodemon         |
 
+
 ## colors theme
 | Section  | Colors   |
 |----------|----------|
@@ -92,7 +93,11 @@ npm install lucide-react
 | Secondary| #e5a186  |
 | Tertiary | #457b9d  |
 | Accent   | #669bbc  |
+| Neutral  | #52575D  |
 
+## Failed function & Issues 
 
+- Upload Image Function
+     - ที่จริงแล้ว image field ในหน้าเพิ่มพนักงานต้องเป็น input Type file นะครับผมสร้างฟังก์ชัน ที่เก็บรูปเอาไว้แล้วครับ แต่ว่า ผมมีปัญหาตอน add pathรูปเข้า database ก็เลยเปลี่ยนเป็น input type Text แทนครับ ถ้าใครผ่านมาเจอก็ ทำให้มันสำเร็จด้วยนะครับ
 
-
+         

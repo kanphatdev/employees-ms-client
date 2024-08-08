@@ -1,12 +1,25 @@
 import { useState } from "react";
 import { Home, User, Settings, LogOut, List, Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const PageLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleToggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/auth/logout');
+      console.log('Logout successful:', response.data);
+      // Redirect to login page after logout
+      navigate('/adminlogin');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   return (
@@ -20,15 +33,17 @@ const PageLayout = ({ children }) => {
         <nav className="hidden md:flex space-x-6 navbar-center">
           <span className="font-semibold">Employee Management</span>
         </nav>
-        <div>
-          {/* Placeholder for any additional top right content */}
-        </div>
+        <div>{/* Placeholder for any additional top right content */}</div>
         {/* Toggle Button for Mobile */}
         <button
           className="md:hidden p-2 text-white hover:text-[#ff6f61] transition duration-200"
           onClick={handleToggleSidebar}
         >
-          {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {isSidebarOpen ? (
+            <X className="w-6 h-6" />
+          ) : (
+            <Menu className="w-6 h-6" />
+          )}
         </button>
       </div>
 
@@ -72,7 +87,8 @@ const PageLayout = ({ children }) => {
           </nav>
           <div className="mt-auto">
             <a
-              href="#"
+              href="/adminlogin"
+              onClick={handleLogout}
               className="flex items-center py-2 px-6 text-white hover:bg-[#bde0fe] hover:text-[#669bbc] transition duration-200"
             >
               <LogOut className="w-5 h-5" />

@@ -13,6 +13,7 @@ import Category from './pages/Category.jsx';
 import Profile from './pages/Profile.jsx';
 import AddCategory from './pages/AddCategory.jsx';
 import AddEmployee from './pages/AddEmployee.jsx';
+import EditEmployee from './pages/EditEmployee.jsx';
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: "/dashboard/add_employee",
     element: <AddEmployee/>,
+  },
+  {
+    path: "/dashboard/edit_employee/:id",
+    element: <EditEmployee/>,
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(

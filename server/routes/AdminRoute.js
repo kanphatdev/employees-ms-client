@@ -110,5 +110,135 @@ adminRouter.get("/employees", (req, res) => {
     res.json(results);
   });
 });
+// Select employee by ID
+adminRouter.get("/employee/:id", (req, res) => {
+  const id = req.params.id;
+  const sql = "SELECT * FROM `employee` WHERE id = ?";
+
+  conn.query(sql, [id], (err, results) => {
+    if (err) {
+      console.error("Query error: " + err);
+      return res
+        .status(500)
+        .json({ error: "An error occurred while querying employee" });
+    }
+
+    if (results.length > 0) {
+      res.json(results[0]);
+    } else {
+      res.status(404).json({ error: "Employee not found" });
+    }
+  });
+});
+
+// Edit employee route
+adminRouter.put("/edit_employee/:id", (req, res) => {
+  const id = req.params.id;
+  const { name, email, salary, address, categorytype, image = "" } = req.body;
+
+  const sql =
+    "UPDATE `employee` SET `name`= ?, `email`= ?, `salary`= ?, `address`= ?, `image`= ?, `category_name`= ? WHERE id = ?";
+  const values = [name, email, salary, address, image, categorytype, id];
+
+  conn.query(sql, values, (err, results) => {
+    if (err) {
+      console.error("Query error: " + err);
+      return res
+        .status(500)
+        .json({ error: "An error occurred while updating employee" });
+    }
+    res.json({ success: true, message: "Employee updated successfully" });
+  });
+});
+// Delete employee route
+adminRouter.delete('/delete_employee/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = "DELETE FROM `employee` WHERE id = ?";
+
+  conn.query(sql, [id], (err, results) => {
+    if (err) {
+      console.error("Query error: " + err);
+      return res.status(500).json({ error: "An error occurred while deleting the employee" });
+    }
+
+    if (results.affectedRows > 0) {
+      res.json({ success: true, message: "Employee deleted successfully" });
+    } else {
+      res.status(404).json({ error: "Employee not found" });
+    }
+  });
+});
+
+
+// Count the number of admins route
+adminRouter.get("/admin_count", (req, res) => {
+  const sql = "SELECT COUNT(id) AS adminCount FROM `admin`";
+
+  conn.query(sql, (err, results) => {
+    if (err) {
+      console.error("Query error: " + err);
+      return res
+        .status(500)
+        .json({ error: "An error occurred while counting admins" });
+    }
+
+    res.json({ adminCount: results[0].adminCount });
+  });
+});
+
+// Count the number of employees route
+adminRouter.get("/employees_count", (req, res) => {
+  const sql = "SELECT COUNT(id) AS employeeCount FROM `employee`";
+
+  conn.query(sql, (err, results) => {
+    if (err) {
+      console.error("Query error: " + err);
+      return res
+        .status(500)
+        .json({ error: "An error occurred while counting employees" });
+    }
+
+    res.json({ employeeCount: results[0].employeeCount });
+  });
+});
+
+// Count the total salary route
+adminRouter.get("/salary_count", (req, res) => {
+  const sql = "SELECT SUM(salary) AS totalSalary FROM employee";
+
+  conn.query(sql, (err, results) => {
+    if (err) {
+      console.error("Query error: " + err);
+      return res.status(500).json({
+        error: "An error occurred while calculating the total salary",
+      });
+    }
+
+    res.json({ totalSalary: results[0].totalSalary });
+  });
+});
+
+// Admins route
+adminRouter.get("/admins", (req, res) => {
+  const sql = "SELECT * FROM `admin`";
+
+  conn.query(sql, (err, results) => {
+    if (err) {
+      console.error("Query error: " + err);
+      return res
+        .status(500)
+        .json({ error: "An error occurred while querying admins" });
+    }
+
+    res.json(results);
+  });
+});
+
+// Logout route
+adminRouter.get("/logout", (req, res) => {
+  res.clearCookie("token"); // Adjusted to clear the "token" cookie
+  return res.json({ status: true, message: "Logged out successfully" });
+});
+
 
 export default adminRouter;

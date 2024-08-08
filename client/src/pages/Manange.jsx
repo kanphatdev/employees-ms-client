@@ -28,17 +28,14 @@ const Manage = () => {
 
   const handleDelete = async (employeeId) => {
     try {
-      await axios.delete(`http://localhost:5000/auth/employee/${employeeId}`);
+      await axios.delete(`http://localhost:5000/auth/delete_employee/${employeeId}`);
       setEmployees(employees.filter((employee) => employee.id !== employeeId));
     } catch (error) {
       console.error("Error deleting employee:", error);
     }
   };
 
-  const handleEdit = (employeeId) => {
-    // Add your edit logic here
-    console.log(`Edit employee with ID: ${employeeId}`);
-  };
+
 
   if (loading) return <div className="p-4">Loading...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
@@ -47,9 +44,12 @@ const Manage = () => {
     <PageLayout>
       <div className="flex items-center justify-between p-4">
         <h1 className="text-3xl font-bold mb-6 text-[#457b9d]">Manage Employees</h1>
-        <button className="bg-[#ffb07c] text-black py-2 px-6 rounded-md hover:bg-[#e5a186] transition-colors duration-300">
+        <Link to={"/dashboard/add_employee"}>
+            <button className="bg-[#ffb07c] text-black py-2 px-6 rounded-md hover:bg-[#e5a186] transition-colors duration-300">
           Add Employee
         </button>
+        </Link>
+    
       </div>
 
       <div className="w-full max-w-4xl overflow-x-auto bg-white shadow-md rounded-lg">
@@ -81,21 +81,20 @@ const Manage = () => {
                 <td className="px-6 py-4 text-sm text-gray-500">{employee.salary}</td>
                 <td className="px-6 py-4 text-sm text-gray-500">{new Date(employee.created_at).toLocaleDateString()}</td>
                 <td className="px-6 py-4 text-sm text-gray-500 flex space-x-2">
-                  <Link to={""}>
-                     <button
-                    onClick={() => handleEdit(employee.id)}
-                    className="flex items-center text-[#457b9d] hover:text-[#52575D] transition-colors duration-300 bg-[#ffb07c] py-1 px-2 rounded-md btn hover:bg-[#e5a186]"
-                  >
-                    <Edit3 className="mr-1 h-5 w-5" /> Edit
-                  </button>
-                  
+                <Link to={`/dashboard/edit_employee/${employee.id}`}>
+                    <button
+                      className="flex items-center text-[#457b9d] hover:text-[#52575D] transition-colors duration-300 bg-[#ffb07c] py-1 px-2 rounded-md"
+                      aria-label={`Edit employee ${employee.id}`}
+                    >
+                      <Edit3 className="mr-1 h-5 w-5" />
+                    </button>
                   </Link>
                
                   <button
                     onClick={() => handleDelete(employee.id)}
                     className="flex items-center text-[#e5a186] hover:text-[#41444B] transition-colors duration-300 bg-[#457b9d] py-1 px-2 rounded-md btn hover:bg-[#e5a186]"
                   >
-                    <Trash2 className="mr-1 h-5 w-5" /> Delete
+                    <Trash2 className="mr-1 h-5 w-5" /> 
                   </button>
                 </td>
               </tr>
