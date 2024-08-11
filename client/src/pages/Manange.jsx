@@ -35,8 +35,6 @@ const Manage = () => {
     }
   };
 
-
-
   if (loading) return <div className="p-4">Loading...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
 
@@ -45,11 +43,10 @@ const Manage = () => {
       <div className="flex items-center justify-between p-4">
         <h1 className="text-3xl font-bold mb-6 text-[#457b9d]">Manage Employees</h1>
         <Link to={"/dashboard/add_employee"}>
-            <button className="bg-[#ffb07c] text-black py-2 px-6 rounded-md hover:bg-[#e5a186] transition-colors duration-300">
-          Add Employee
-        </button>
+          <button className="bg-[#ffb07c] text-black py-2 px-6 rounded-md hover:bg-[#e5a186] transition-colors duration-300">
+            Add Employee
+          </button>
         </Link>
-    
       </div>
 
       <div className="w-full max-w-4xl overflow-x-auto bg-white shadow-md rounded-lg">
@@ -66,39 +63,46 @@ const Manage = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {employees.map((employee) => (
-              <tr key={employee.id} className="hover:bg-gray-100">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">{employee.id}</td>
-                <td className="px-6 py-4 text-sm text-gray-500">{employee.name}</td>
-                <td className="px-6 py-4">
-                  <div className="avatar">
-                    <div className="mask mask-squircle h-12 w-12">
-                      <img src={employee.image} alt={employee.name} />
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-500">{employee.address}</td>
-                <td className="px-6 py-4 text-sm text-gray-500">{employee.salary}</td>
-                <td className="px-6 py-4 text-sm text-gray-500">{new Date(employee.created_at).toLocaleDateString()}</td>
-                <td className="px-6 py-4 text-sm text-gray-500 flex space-x-2">
-                <Link to={`/dashboard/edit_employee/${employee.id}`}>
-                    <button
-                      className="flex items-center text-[#457b9d] hover:text-[#52575D] transition-colors duration-300 bg-[#ffb07c] py-1 px-2 rounded-md"
-                      aria-label={`Edit employee ${employee.id}`}
-                    >
-                      <Edit3 className="mr-1 h-5 w-5" />
-                    </button>
-                  </Link>
-               
-                  <button
-                    onClick={() => handleDelete(employee.id)}
-                    className="flex items-center text-[#e5a186] hover:text-[#41444B] transition-colors duration-300 bg-[#457b9d] py-1 px-2 rounded-md btn hover:bg-[#e5a186]"
-                  >
-                    <Trash2 className="mr-1 h-5 w-5" /> 
-                  </button>
+            {employees.length === 0 ? (
+              <tr>
+                <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                  No employees found
                 </td>
               </tr>
-            ))}
+            ) : (
+              employees.map((employee) => (
+                <tr key={employee.id} className="hover:bg-gray-100">
+                  <td className="px-6 py-4 text-sm font-medium text-gray-900">{employee.id}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500">{employee.name}</td>
+                  <td className="px-6 py-4">
+                    <div className="avatar">
+                      <div className="mask mask-squircle h-12 w-12">
+                        <img src={employee.image} alt={employee.name} />
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-500">{employee.address}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500">{employee.salary}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500">{new Date(employee.created_at).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500 flex space-x-2">
+                    <Link to={`/dashboard/edit_employee/${employee.id}`}>
+                      <button
+                        className="flex items-center text-[#457b9d] hover:text-[#52575D] transition-colors duration-300 bg-[#ffb07c] py-1 px-2 rounded-md"
+                        aria-label={`Edit employee ${employee.id}`}
+                      >
+                        <Edit3 className="mr-1 h-5 w-5" />
+                      </button>
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(employee.id)}
+                      className="flex items-center text-[#e5a186] hover:text-[#41444B] transition-colors duration-300 bg-[#457b9d] py-1 px-2 rounded-md"
+                    >
+                      <Trash2 className="mr-1 h-5 w-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

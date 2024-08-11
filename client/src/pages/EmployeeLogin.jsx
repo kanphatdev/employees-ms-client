@@ -1,40 +1,39 @@
-import { useState } from "react";
-import { Lock, User } from "lucide-react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { Lock, User } from 'lucide-react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const EmployeeLogin = () => {
   const [values, setValues] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState(""); // For error handling
-  const [loading, setLoading] = useState(false); // For loading state
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  axios.defaults.withCredentials = true; // Store credentials
+  axios.defaults.withCredentials = true;
 
   const handleLogin = (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true when starting the request
-    setError(""); // Clear previous errors
+    setLoading(true);
+    setError("");
 
     axios
-      .post("http://localhost:5000/auth/adminlogin", values)
+      .post("http://localhost:5000/employee/employee_login", values)
       .then((result) => {
-        console.log(result);
         if (result.data.loginStatus) {
           localStorage.setItem("valid",true)
-          navigate("/dashboard");
+          navigate("/employee_detail/" + result.data.id);
         } else {
           setError(result.data.Error);
         }
       })
       .catch((err) => {
         console.error(err);
-        setError("Login failed. Please try again."); // Set error message
+        setError("Login failed. Please try again.");
       })
       .finally(() => {
-        setLoading(false); // Set loading to false after request completes
+        setLoading(false);
       });
   };
 
@@ -45,7 +44,7 @@ const Login = () => {
           <img src="./logo.svg" alt="Logo" width={50} height={50} />
         </div>
         <h2 className="text-2xl font-bold text-center mb-6 capitalize" style={{ color: "#52575D" }}>
-        admin  Login
+          Employee Login
         </h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
@@ -92,22 +91,22 @@ const Login = () => {
             </div>
           </div>
           {error && (
-            <p className="text-red-500 text-center mb-4">{error}</p> // Display error message
+            <p className="text-red-500 text-center mb-4">{error}</p>
           )}
           <button
             type="submit"
             className={`w-full ${
               loading ? "bg-[#ffb07c]" : "bg-[#e5a186]"
             } text-white py-2 rounded-lg hover:bg-[#457b9d] transition duration-200`}
-            disabled={loading} // Disable button while loading
+            disabled={loading}
           >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
         <p className="text-center text-sm mt-4 capitalize" style={{ color: "#52575D" }}>
-         switch role{" "}
-          <a href="/employee_login" className="text-[#669bbc] hover:underline">
-            employee side
+          Switch role{" "}
+          <a href="/adminlogin" className="text-[#669bbc] hover:underline">
+            admin side
           </a>
         </p>
       </div>
@@ -115,4 +114,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default EmployeeLogin;

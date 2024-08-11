@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import PageLayout from "./layout";
 import axios from "axios";
-import { CreditCard, UserCheck, UserCog, UserPen, UserPlus } from "lucide-react";
+import { CreditCard, Trash2, UserCog, UserPen, UserPlus } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const [AdminTotal, setAdminTotal] = useState(0);
@@ -57,6 +58,15 @@ const Dashboard = () => {
     }
   };
 
+  const handleDelete = async (adminId) => {
+    try {
+      await axios.delete(`http://localhost:5000/auth/delete_admin/${adminId}`);
+      setAdmins(admins.filter((admin) => admin.id !== adminId));
+    } catch (error) {
+      console.error("Error deleting admin:", error);
+    }
+  };
+
   return (
     <PageLayout>
       <section className="flex flex-wrap items-center justify-center">
@@ -86,10 +96,15 @@ const Dashboard = () => {
       </section>
 
       <section className="mt-4 px-4 md:px-5 pt-3">
-        <div className="justify-start">
+        <div className="flex items-center justify-between">
           <h1 className="text-3xl md:text-5xl font-bold capitalize text-neutral">
             List of Admin
           </h1>
+          <Link to={"/dashboard/add_admin"}>
+            <button className="btn bg-primary hover:bg-secondary text-black">
+              Add Admin
+            </button>
+          </Link>
         </div>
         <div className="overflow-x-auto pt-4">
           <table className="table w-full shadow-lg border border-gray-200 rounded-lg">
@@ -101,22 +116,35 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {admins.map((admin, index) => (
-                <tr key={admin.id} className="bg-white border-b">
-                  <td className="p-4">{index + 1}</td>
-                  <td className="p-4">{admin.email}</td>
-                  <td className="p-4">
-                    <div className="flex gap-4 items-center justify-center">
-                      <button className="btn bg-primary text-white hover:bg-secondary p-2 rounded">
-                        <UserCheck />
-                      </button>
-                      <button className="btn bg-neutral text-white hover:bg-neutral-dark p-2 rounded">
-                        <UserPen />
-                      </button>
-                    </div>
+              {admins.length === 0 ? (
+                <tr>
+                  <td colSpan="3" className="p-4 text-center text-gray-500">
+                    No admins found
                   </td>
                 </tr>
-              ))}
+              ) : (
+                admins.map((admin, index) => (
+                  <tr key={admin.id} className="bg-white border-b">
+                    <td className="p-4">{index + 1}</td>
+                    <td className="p-4">{admin.email}</td>
+                    <td className="p-4">
+                      <div className="flex gap-4 items-center justify-center">
+                        <Link to={`/dashboard/edit_admin/${admin.id}`}>
+                          <button className="btn bg-primary text-white hover:bg-secondary p-2 rounded">
+                            <UserPen />
+                          </button>
+                        </Link>
+                        <button
+                          className="btn bg-neutral text-white hover:bg-neutral-dark p-2 rounded"
+                          onClick={() => handleDelete(admin.id)}
+                        >
+                          <Trash2 />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

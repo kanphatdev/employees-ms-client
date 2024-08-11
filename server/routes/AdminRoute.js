@@ -31,7 +31,7 @@ adminRouter.post("/adminlogin", (req, res) => {
     if (results.length > 0) {
       const email = results[0].email;
       const token = jwt.sign(
-        { role: "admin", email: email },
+        { role: "admin", email: email,id: results[0].id },
         "jwt_secret_key",
         { expiresIn: "1d" }
       );
@@ -75,8 +75,8 @@ adminRouter.post("/add_category", (req, res) => {
 
 // Add employee route
 adminRouter.post("/add_employee", async (req, res) => {
-  const { name, email, password, salary, address, categorytype } = req.body;
-  const image = req.file ? req.file.filename : "";
+  const { name, email, password, salary, address, categorytype,image } = req.body;
+
 
   try {
     // Hash the password
@@ -233,12 +233,83 @@ adminRouter.get("/admins", (req, res) => {
     res.json(results);
   });
 });
+// Add admin route (without password hashing)
+adminRouter.post("/add_admin", (req, res) => {
+  const { email, password } = req.body;
+
+  const sql = "INSERT INTO `admin` (`email`, `password`) VALUES (?, ?)";
+
+  conn.query(sql, [email, password], (err, results) => {
+    if (err) {
+      console.error("Query error: " + err);
+      return res.status(500).json({ error: "An error occurred while adding the admin" });
+    }
+
+    res.json({ success: true, message: "Admin added successfully" });
+  });
+});
+
+// Select admin by ID
+adminRouter.get("/admin/:id", (req, res) => {
+  const id = req.params.id;
+  const sql = "SELECT * FROM `admin` WHERE id = ?";
+
+  conn.query(sql, [id], (err, results) => {
+    if (err) {
+      console.error("Query error: " + err);
+      return res.status(500).json({ error: "An error occurred while querying admin" });
+    }
+
+    if (results.length > 0) {
+      res.json(results[0]);
+    } else {
+      res.status(404).json({ error: "Admin not found" });
+    }
+  });
+});
+
+// Edit admin route
+adminRouter.put("/edit_admin/:id", (req, res) => {
+  const id = req.params.id;
+  const { email, password } = req.body;
+
+  const sql = "UPDATE `admin` SET `email` = ?, `password` = ? WHERE id = ?";
+  const values = [email, password, id];
+
+  conn.query(sql, values, (err, results) => {
+    if (err) {
+      console.error("Query error: " + err);
+      return res
+        .status(500)
+        .json({ error: "An error occurred while updating admin" });
+    }
+
+    res.json({ success: true, message: "Admin updated successfully" });
+  });
+});
+// Delete admin route
+adminRouter.delete('/delete_admin/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = "DELETE FROM `admin` WHERE id = ?";
+
+  conn.query(sql, [id], (err, results) => {
+    if (err) {
+      console.error("Query error: " + err);
+      return res.status(500).json({ error: "An error occurred while deleting the admin" });
+    }
+
+    if (results.affectedRows > 0) {
+      res.json({ success: true, message: "Admin deleted successfully" });
+    } else {
+      res.status(404).json({ error: "Admin not found" });
+    }
+  });
+});
+
 
 // Logout route
 adminRouter.get("/logout", (req, res) => {
   res.clearCookie("token"); // Adjusted to clear the "token" cookie
   return res.json({ status: true, message: "Logged out successfully" });
 });
-
-
 export default adminRouter;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, User, Settings, LogOut, List, Menu, X } from "lucide-react";
+import { Home, User, Settings, LogOut, List, Menu, X, ArrowRightLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -16,6 +16,7 @@ const PageLayout = ({ children }) => {
       const response = await axios.get('http://localhost:5000/auth/logout');
       console.log('Logout successful:', response.data);
       // Redirect to login page after logout
+      localStorage.removeItem("valid")
       navigate('/adminlogin');
     } catch (error) {
       console.error('Error logging out:', error);
@@ -83,6 +84,14 @@ const PageLayout = ({ children }) => {
             >
               <Settings className="w-5 h-5" />
               <span className="mx-4">Profile</span>
+            </Link>
+            <Link
+              to="/portal"
+              className="flex items-center py-2 px-6 text-white hover:bg-[#bde0fe] hover:text-[#669bbc] transition duration-200"
+            >
+              <ArrowRightLeft className="w-5 h-5"/>
+             
+              <span className="mx-4 capitalize">Switch role</span>
             </Link>
           </nav>
           <div className="mt-auto">
