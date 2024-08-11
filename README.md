@@ -101,3 +101,13 @@ npm install lucide-react
      - ที่จริงแล้ว image field ในหน้าเพิ่มพนักงานต้องเป็น input Type file นะครับผมสร้างฟังก์ชัน ที่เก็บรูปเอาไว้แล้วครับ แต่ว่า ผมมีปัญหาตอน add pathรูปเข้า database ก็เลยเปลี่ยนเป็น input type Text แทนครับ ถ้าใครผ่านมาเจอก็ ทำให้มันสำเร็จด้วยนะครับ
 
          
+## User and password of the admin site
+
+```bash
+## username
+admin@gmail.com
+```
+```bash
+## Password
+1234
+```
