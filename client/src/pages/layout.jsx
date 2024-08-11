@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Home, User, Settings, LogOut, List, Menu, X, ArrowRightLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import PropTypes from 'prop-types';
 
 const PageLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -15,8 +16,7 @@ const PageLayout = ({ children }) => {
     try {
       const response = await axios.get('http://localhost:5000/auth/logout');
       console.log('Logout successful:', response.data);
-      // Redirect to login page after logout
-      localStorage.removeItem("valid")
+      localStorage.removeItem("valid");
       navigate('/adminlogin');
     } catch (error) {
       console.error('Error logging out:', error);
@@ -35,7 +35,6 @@ const PageLayout = ({ children }) => {
           <span className="font-semibold">Employee Management</span>
         </nav>
         <div>{/* Placeholder for any additional top right content */}</div>
-        {/* Toggle Button for Mobile */}
         <button
           className="md:hidden p-2 text-white hover:text-[#ff6f61] transition duration-200"
           onClick={handleToggleSidebar}
@@ -48,7 +47,6 @@ const PageLayout = ({ children }) => {
         </button>
       </div>
 
-      {/* Main Content Area */}
       <div className="flex flex-grow">
         {/* Sidebar */}
         <div
@@ -90,7 +88,6 @@ const PageLayout = ({ children }) => {
               className="flex items-center py-2 px-6 text-white hover:bg-[#bde0fe] hover:text-[#669bbc] transition duration-200"
             >
               <ArrowRightLeft className="w-5 h-5"/>
-             
               <span className="mx-4 capitalize">Switch role</span>
             </Link>
           </nav>
@@ -109,11 +106,15 @@ const PageLayout = ({ children }) => {
         {/* Workspace */}
         <div className="flex-1 p-6 bg-[#f0f4f8]">
           {children}
-          {/* Add your workspace content here */}
         </div>
       </div>
     </div>
   );
+};
+
+// Define propTypes for the PageLayout component
+PageLayout.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default PageLayout;

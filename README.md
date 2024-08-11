@@ -70,7 +70,9 @@ npm i axios
 ```bash
 npm install lucide-react
 ```
-
+```bash
+npm install prop-types --save
+```
 
 # Code Stack
 
@@ -82,7 +84,7 @@ npm install lucide-react
 | React Router DOM    | Bcrypt          |
 | Axios               | JSONWebToken    |
 | Lucide Icons        | Multer          |
-|                     | Path            |
+|  prop-types         | Path            |
 |                     | Nodemon         |
 
 
