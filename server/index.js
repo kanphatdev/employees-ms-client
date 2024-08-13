@@ -23,22 +23,38 @@ app.use("/employee", employeeRouter);
 
 // add static for the image
 // app.use(express.static('Public'));
+
+// Middleware function to verify the user's JWT
 const verifyUser = (req, res, next) => {
+  // Retrieve the token from the cookies
   const token = req.cookies.token;
+
+  // If a token is present
   if (token) {
+    // Verify the token using the secret key
     jwt.verify(token, "jwt_secret_key", (err, decoded) => {
+      // If the token is invalid or there's an error, send a response indicating failure
       if (err) return res.json({ Status: false, Error: "wrong token" });
+      
+      // If the token is valid, attach the user's ID and role to the request object
       req.id = decoded.id;
       req.role = decoded.role;
+      
+      // Proceed to the next middleware or route handler
       next();
     });
   } else {
+    // If no token is present, send a response indicating the user is not authenticated
     return res.json({ Status: false, Error: "not authenticated" });
   }
 };
+
+// Example usage: Route that requires user authentication
 app.get("/verify", verifyUser, (req, res) => {
-    return res.json({Status: true, role: req.role,id: req.id})
+  // If the user is authenticated, send back the user's role and ID
+  return res.json({ Status: true, role: req.role, id: req.id });
 });
+
 
 // Start the server
 app.listen(port, () => {
